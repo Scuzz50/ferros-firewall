@@ -1,5 +1,9 @@
 build:
-	cargo +nightly-2024-05-22 build --release --target bpfel-unknown-none -Z build-std=core -p ferros-ebpf
+	cargo +nightly build \
+		--release \
+		-Z build-std=core \
+		--target bpfel-unknown-none \
+		-p ferros-ebpf
 	llvm-objcopy --strip-all --output-format=elf64-bpf \
 		target/bpfel-unknown-none/release/ferros-ebpf \
 		target/bpfel-unknown-none/release/ferros-ebpf.o

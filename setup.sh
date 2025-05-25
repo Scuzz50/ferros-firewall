@@ -15,13 +15,15 @@ if ! command -v cargo &> /dev/null; then
     source "$HOME/.cargo/env"
 fi
 
-echo "🔧 Installing specific nightly toolchain: nightly-2024-05-22"
-rustup install nightly-2024-05-22
-rustup component add rust-src --toolchain nightly-2024-05-22
-rustup target add bpfel-unknown-none --toolchain nightly-2024-05-22
+echo "🔧 Installing nightly (latest)"
+rustup install nightly
+rustup component add rust-src --toolchain nightly
+
+echo "📦 Adding bpf target (no prebuilt std needed)"
+rustup target add bpfel-unknown-none --toolchain nightly
 
 echo "💡 Sourcing Rust environment..."
 source "$HOME/.cargo/env"
 
-echo "🔨 Building and attaching ferros-firewall on ${IFACE}..."
+echo "🔨 Building and running firewall on ${IFACE}..."
 make run IFACE=${IFACE}

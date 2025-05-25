@@ -13,8 +13,13 @@ if ! command -v cargo &> /dev/null; then
     source "$HOME/.cargo/env"
 fi
 
-echo "🧱 Adding bpfel target..."
-rustup target add bpfel-unknown-none
+echo "🧪 Installing nightly toolchain and bpf target..."
+rustup install nightly
+rustup component add rust-src --toolchain nightly
+rustup target add bpfel-unknown-none --toolchain nightly
+
+echo "💡 Sourcing Rust environment..."
+source "$HOME/.cargo/env"
 
 echo "🔧 Building eBPF and attaching to ${IFACE}..."
 make run

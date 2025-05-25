@@ -15,12 +15,9 @@ if ! command -v cargo &> /dev/null; then
     source "$HOME/.cargo/env"
 fi
 
-echo "🔧 Installing nightly (latest)"
+echo "🔧 Installing nightly and rust-src"
 rustup install nightly
 rustup component add rust-src --toolchain nightly
-
-echo "📦 Adding bpf target (no prebuilt std needed)"
-rustup target add bpfel-unknown-none --toolchain nightly
 
 echo "💡 Sourcing Rust environment..."
 source "$HOME/.cargo/env"

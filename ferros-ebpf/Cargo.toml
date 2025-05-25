@@ -1,0 +1,11 @@
+[package]
+name = "ferros-ebpf"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+aya-bpf = "0.13"
+
+[lib]
+crate-type = ["cdylib"]
+path = "src/lib.rs"

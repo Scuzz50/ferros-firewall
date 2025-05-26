@@ -3,31 +3,11 @@ set -e
 
 IFACE=${1:-eth0}
 
-echo "📦 Installing base build dependencies..."
+echo "📦 Installing build dependencies..."
 sudo apt update
-sudo apt install -y \
-  build-essential \
-  clang \
-  llvm \
-  libelf-dev \
-  zlib1g-dev \
-  libssl-dev \
-  pkg-config \
-  make \
-  git \
-  curl \
-  jq \
-  bpftool \
-  software-properties-common \
-  gnupg \
-  lsb-release \
-  linux-headers-$(uname -r)
-
-echo "➕ Adding LLVM APT repository..."
-wget -O - https://apt.llvm.org/llvm.sh | sudo bash -s -- 18
-
-echo "🔧 Installing LLVM 18 toolchain..."
-sudo apt install -y llvm-18-dev libclang-18-dev libpolly-18-dev
+sudo apt install -y build-essential clang llvm llvm-18-dev libclang-18-dev libpolly-18-dev \
+    libelf-dev zlib1g-dev libssl-dev pkg-config make git curl jq \
+    linux-headers-$(uname -r) bpftool
 
 echo "🦀 Installing Rust if missing..."
 if ! command -v cargo &> /dev/null; then
@@ -35,11 +15,11 @@ if ! command -v cargo &> /dev/null; then
     source "$HOME/.cargo/env"
 fi
 
-echo "📦 Installing nightly + rust-src..."
+echo "🔧 Installing nightly and rust-src"
 rustup install nightly
 rustup component add rust-src --toolchain nightly
 
-echo "🔧 Installing bpf-linker..."
+echo "🛠 Installing bpf-linker..."
 cargo install bpf-linker
 
 echo "💡 Sourcing Rust environment..."

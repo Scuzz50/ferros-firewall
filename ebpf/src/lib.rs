@@ -3,15 +3,15 @@
 
 use aya_ebpf::{
     macros::map,
-    maps::HashMap,
     macros::xdp,
+    maps::HashMap,
     programs::XdpContext,
 };
 
 #[map(name = "BLOCKED_IPS")]
 static mut BLOCKED_IPS: HashMap<u32, u8> = HashMap::<u32, u8>::with_max_entries(1024, 0);
 
-#[xdp(name = "firewall")]
+#[xdp]
 pub fn firewall(ctx: XdpContext) -> u32 {
     match try_firewall(ctx) {
         Ok(ret) => ret,
@@ -19,14 +19,19 @@ pub fn firewall(ctx: XdpContext) -> u32 {
     }
 }
 
-fn try_firewall(ctx: XdpContext) -> Result<u32, ()> {
-    let ip = ctx.data().ok_or(())?;
+fn try_firewall(_ctx: XdpContext) -> Result<u32, ()> {
+    let ip: u32 = 0x0a000001; // Placeholder IP 10.0.0.1
     unsafe {
         if BLOCKED_IPS.get(&ip).is_some() {
             return Ok(xdp_action::XDP_DROP);
         }
     }
     Ok(xdp_action::XDP_PASS)
+}
+
+#[panic_handler]
+fn panic(_info: &core::panic::PanicInfo) -> ! {
+    core::arch::asm!("ud2", options(noreturn))
 }
 
 mod xdp_action {

@@ -10,11 +10,7 @@ all: $(EBPF_OBJ)
 $(EBPF_OBJ): ebpf/src/lib.rs
 	cd ebpf && \
 	cargo +nightly build --release --target bpfel-unknown-none -Z build-std=core
-	llvm-objcopy \
-		--strip-all \
-		--output-format=elf64-bpf \
-		ebpf/$(EBPF_TARGET) \
-		$(EBPF_OBJ)
+	llvm-strip -o ../$(EBPF_OBJ) $(EBPF_TARGET)
 
 run: all
 	cd userspace && cargo run --release -- $(IFACE)

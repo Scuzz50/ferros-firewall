@@ -1,6 +1,6 @@
 IFACE ?= eth0
 
-EBPF_TARGET = ebpf/target/bpfel-unknown-none/release/ferros_firewall_ebpf
+EBPF_TARGET = ebpf/target/bpfel-unknown-none/release/ferros_firewall_ebpf.o
 EBPF_OBJ = target/ferros_firewall_ebpf.o
 
 .PHONY: all run clean

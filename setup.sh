@@ -30,9 +30,8 @@ sudo ./llvm.sh 19
 echo "🔧 Installing LLVM 19 toolchain..."
 sudo apt install -y llvm-19-dev libclang-19-dev libpolly-19-dev
 
-echo "🔧 Installing bpftool and bindgen..."
+echo "🔧 Installing bpftool..."
 sudo apt install -y bpftool libclang-dev
-cargo install bindgen || true
 
 echo "🦀 Installing Rust if missing..."
 if ! command -v cargo &> /dev/null; then
@@ -44,8 +43,8 @@ echo "📦 Installing nightly + rust-src..."
 rustup install nightly
 rustup component add rust-src --toolchain nightly
 
-echo "🔧 Installing bpf-linker..."
-cargo install bpf-linker --no-default-features || true
+echo "🔧 Installing bpf-linker v0.9.13..."
+cargo install bpf-linker --no-default-features --version 0.9.13 || true
 
 echo "💡 Sourcing Rust environment..."
 source "$HOME/.cargo/env"

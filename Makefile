@@ -1,6 +1,6 @@
 IFACE ?= eth0
 
-EBPF_TARGET = ebpf/target/bpfel-unknown-none/release/ferros_firewall_ebpf
+EBPF_TARGET = ebpf/target/bpfel-unknown-none/release/libferros_firewall_ebpf.a
 EBPF_OBJ = target/ferros_firewall_ebpf.o
 
 .PHONY: all run clean
@@ -9,7 +9,7 @@ all: $(EBPF_OBJ)
 
 $(EBPF_OBJ): ebpf/src/lib.rs
 	cargo +nightly build --release --target bpfel-unknown-none -Z build-std=core --manifest-path ebpf/Cargo.toml
-	llvm-strip -o $(EBPF_OBJ) $(EBPF_TARGET)
+	cp $(EBPF_TARGET) $(EBPF_OBJ)
 
 run: all
 	cd userspace && cargo run --release -- $(IFACE)

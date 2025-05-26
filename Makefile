@@ -1,12 +1,23 @@
-build:
-	cargo +nightly build \
-		--release \
-		-Z build-std=core \
-		--target bpfel-unknown-none \
-		-p ferros-ebpf
-	llvm-objcopy --strip-all --output-format=elf64-bpf \
-		target/bpfel-unknown-none/release/ferros-ebpf \
-		target/bpfel-unknown-none/release/ferros-ebpf.o
+IFACE ?= eth0
 
-run: build
-	cargo run -p ferros-loader -- --iface $(IFACE)
+EBPF_TARGET = target/bpfel-unknown-none/release/ferros_firewall_ebpf
+EBPF_OBJ = target/ferros_firewall_ebpf.o
+
+.PHONY: all run clean
+
+all: $(EBPF_OBJ)
+
+$(EBPF_OBJ): ebpf/src/lib.rs
+	cd ebpf && \
+	cargo +nightly build --release --target bpfel-unknown-none -Z build-std=core
+	llvm-objcopy \
+		--strip-all \
+		--output-format=elf64-bpf \
+		ebpf/$(EBPF_TARGET) \
+		$(EBPF_OBJ)
+
+run: all
+	cd userspace && cargo run --release -- $(IFACE)
+
+clean:
+	cargo clean

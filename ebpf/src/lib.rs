@@ -31,7 +31,7 @@ fn try_firewall(_ctx: XdpContext) -> Result<u32, ()> {
 
 #[panic_handler]
 fn panic(_info: &core::panic::PanicInfo) -> ! {
-    core::arch::asm!("ud2", options(noreturn))
+    unsafe { core::intrinsics::abort() }
 }
 
 mod xdp_action {

@@ -12,6 +12,7 @@ use aya_ebpf::{
 static mut BLOCKED_IPS: HashMap<u32, u8> = HashMap::<u32, u8>::with_max_entries(1024, 0);
 
 #[xdp]
+#[no_mangle]
 pub fn firewall(ctx: XdpContext) -> u32 {
     match try_firewall(ctx) {
         Ok(ret) => ret,

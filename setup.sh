@@ -17,6 +17,7 @@ sudo apt install -y \
   git \
   curl \
   jq \
+  libzstd-dev \
   software-properties-common \
   gnupg \
   lsb-release \

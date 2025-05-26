@@ -23,13 +23,13 @@ sudo apt install -y \
   lsb-release \
   linux-headers-$(uname -r)
 
-echo "➕ Adding LLVM APT repository for version 19..."
+echo "➕ Adding LLVM APT repository for version 20..."
 wget https://apt.llvm.org/llvm.sh
 chmod +x llvm.sh
-sudo ./llvm.sh 19
+sudo ./llvm.sh 20
 
-echo "🔧 Installing LLVM 19 toolchain..."
-sudo apt install -y llvm-19-dev libclang-19-dev libpolly-19-dev
+echo "🔧 Installing LLVM 20 toolchain..."
+sudo apt install -y llvm-20-dev libclang-20-dev libpolly-20-dev
 
 echo "🔧 Installing bpftool..."
 sudo apt install -y bpftool libclang-dev
@@ -44,8 +44,11 @@ echo "📦 Installing nightly + rust-src..."
 rustup install nightly
 rustup component add rust-src --toolchain nightly
 
-echo "🔧 Installing bpf-linker v0.9.13..."
-cargo install bpf-linker --no-default-features --version 0.9.13 || true
+echo "🔧 Uninstalling any previous bpf-linker..."
+cargo uninstall bpf-linker || true
+
+echo "🔧 Rebuilding bpf-linker with LLVM 20..."
+LLVM_SYS_201_PREFIX=/usr/lib/llvm-20 cargo install bpf-linker --no-default-features
 
 echo "💡 Sourcing Rust environment..."
 source "$HOME/.cargo/env"

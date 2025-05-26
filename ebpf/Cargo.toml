@@ -7,4 +7,4 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-aya-bpf = { git = "https://github.com/aya-rs/aya", branch = "main", default-features = false }
+aya-ebpf = "0.1.1"

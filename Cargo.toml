@@ -1,5 +1,3 @@
 [workspace]
-members = [
-    "ferros-ebpf",
-    "ferros-loader"
-]
+members = ["userspace", "ebpf"]
+resolver = "2"

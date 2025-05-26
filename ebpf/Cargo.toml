@@ -1,0 +1,13 @@
+[package]
+name = "ferros_firewall_ebpf"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+aya-bpf = "0.13.1"
+core = "0.0.0"
+
+[build-dependencies]

@@ -12,7 +12,7 @@ target/ferros_firewall_ebpf.o: ebpf/src/lib.rs
 		--target-dir target/bpf
 	cd target/bpf/bpfel-unknown-none/release && \
 	llvm-ar x libferros_firewall_ebpf.a && \
-	mv ferros_firewall_ebpf.o ../../../../target/ferros_firewall_ebpf.o
+	find . -type f -name "*.o" -exec cp {} ../../../../target/ferros_firewall_ebpf.o \;
 
 run: all
 	cd userspace && cargo run --release -- $(IFACE)

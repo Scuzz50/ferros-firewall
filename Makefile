@@ -1,4 +1,4 @@
-# Makefile for ferros-firewall using aya-tool
+# Makefile for ferros-firewall (eBPF build with cargo)
 
 EBPF_DIR := ebpf
 TARGET := target/ferros_firewall_ebpf.o
@@ -9,8 +9,9 @@ IFACE ?= eth0
 all: $(TARGET)
 
 $(TARGET):
-	@echo "🔨 Building eBPF program with aya-tool..."
-	aya-tool build --release --target-dir $(EBPF_DIR)/target
+	@echo "🔨 Building eBPF program with cargo..."
+	cd $(EBPF_DIR) && \
+	cargo +nightly build --release --target bpfel-unknown-none -Z build-std=core
 	mkdir -p target
 	cp $(EBPF_DIR)/target/bpfel-unknown-none/release/ferros_firewall_ebpf.o $(TARGET)
 

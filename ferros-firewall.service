@@ -1,0 +1,14 @@
+[Unit]
+Description=Ferros Firewall Loader
+After=network.target
+
+[Service]
+ExecStart=/home/debian/ferros-firewall/target/release/ferros-userspace eth0
+WorkingDirectory=/home/debian/ferros-firewall
+AmbientCapabilities=CAP_BPF CAP_NET_ADMIN
+CapabilityBoundingSet=CAP_BPF CAP_NET_ADMIN
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

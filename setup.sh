@@ -3,7 +3,7 @@ set -e
 
 IFACE=${1:-eth0}
 sudo apt update
-sudo apt install -y clang llvm-18 llvm-objcopy-18 llvm-ar-18 libclang-dev     libelf-dev build-essential zlib1g-dev libssl-dev pkg-config git curl jq     linux-headers-$(uname -r)
+sudo apt install -y clang llvm llvm-objcopy llvm-ar libclang-dev     libelf-dev build-essential zlib1g-dev libssl-dev pkg-config git curl jq     linux-headers-$(uname -r)
 
 if ! command -v cargo &>/dev/null; then
     curl https://sh.rustup.rs -sSf | sh -s -- -y

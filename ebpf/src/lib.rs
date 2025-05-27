@@ -1,11 +1,12 @@
 #![no_std]
 #![no_main]
 
-use aya_ebpf::{
-    bindings::xdp_action,
-    macros::xdp,
-    programs::XdpContext,
-};
+extern crate aya_ebpf;
+extern crate aya_ebpf_macros;
+
+use aya_ebpf::bindings::xdp_action;
+use aya_ebpf::programs::XdpContext;
+use aya_ebpf_macros::xdp;
 
 #[xdp(name = "firewall")]
 pub fn firewall(ctx: XdpContext) -> u32 {
@@ -16,7 +17,6 @@ pub fn firewall(ctx: XdpContext) -> u32 {
 }
 
 fn try_firewall(_ctx: &XdpContext) -> Result<u32, ()> {
-    // Default action: allow all traffic for now
     Ok(xdp_action::XDP_PASS)
 }
 

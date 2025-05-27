@@ -1,7 +1,7 @@
 #![no_std]
 #![no_main]
 
-use aya_bpf::{
+use aya_ebpf::{
     bindings::xdp_action,
     macros::xdp,
     programs::XdpContext,
@@ -16,12 +16,11 @@ pub fn firewall(ctx: XdpContext) -> u32 {
 }
 
 fn try_firewall(_ctx: &XdpContext) -> Result<u32, ()> {
-    // ✅ Replace this with real filtering logic later
+    // Default action: allow all traffic for now
     Ok(xdp_action::XDP_PASS)
 }
 
 #[panic_handler]
 fn panic(_: &core::panic::PanicInfo) -> ! {
-    // ⛔️ `asm!` is unstable — replace with safe infinite loop for now
     loop {}
 }

@@ -1,11 +1,16 @@
-BPF_TARGET = target/bpf/bpfel-unknown-none/release
-EBPF_OBJECT = $(BPF_TARGET)/libferros_firewall_ebpf.so
-US_TARGET = target/release/ferros-userspace
+
+LLVM_AR ?= llvm-ar-18
+OBJCOPY ?= llvm-objcopy-18
 
 all:
-	cargo +nightly build --release --target bpfel-unknown-none -Z build-std=core --manifest-path ebpf/Cargo.toml --target-dir target/bpf
-	cp $(EBPF_OBJECT) target/ferros_firewall_ebpf.o
-	cargo build --release --manifest-path userspace/Cargo.toml
+	cargo +nightly build --release \
+		-Z build-std=core \
+		--manifest-path ebpf/Cargo.toml \
+		--target bpfel-unknown-none \
+		--target-dir target/bpf
 
-run: all
-	cd userspace && cargo run --release -- $(IFACE)
+target/ferros_firewall_ebpf.o: all
+	cp target/bpf/bpfel-unknown-none/release/libferros_firewall_ebpf.so target/ferros_firewall_ebpf.o
+
+run: target/ferros_firewall_ebpf.o
+	cd userspace && cargo run --release -- eth0

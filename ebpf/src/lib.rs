@@ -1,12 +1,11 @@
 #![no_std]
 #![no_main]
 
-use aya_bpf::{
+use aya_ebpf::{
     macros::{map, xdp},
     maps::HashMap,
     programs::XdpContext,
 };
-use core::mem;
 
 #[map(name = "BLOCKED_IPS")]
 static mut BLOCKED_IPS: HashMap<u32, u8> = HashMap::<u32, u8>::with_max_entries(1024, 0);
@@ -20,7 +19,7 @@ pub fn firewall(ctx: XdpContext) -> u32 {
 }
 
 fn try_firewall(ctx: XdpContext) -> Result<u32, ()> {
-    let ip = u32::from_be(ctx.load(26).map_err(|_| ())?); // Read destination IP from packet (offset 26 for IPv4)
+    let ip = u32::from_be(ctx.load(26).map_err(|_| ())?);
     unsafe {
         if BLOCKED_IPS.get(&ip).is_some() {
             return Ok(xdp_action::XDP_DROP);

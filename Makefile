@@ -10,9 +10,7 @@ target/ferros_firewall_ebpf.o: ebpf/src/lib.rs
 		--manifest-path ebpf/Cargo.toml \
 		--target bpfel-unknown-none \
 		--target-dir target/bpf
-	cd target/bpf/bpfel-unknown-none/release && \
-	llvm-ar x libferros_firewall_ebpf.a && \
-	find . -type f -name "*.o" -exec cp {} ../../../../target/ferros_firewall_ebpf.o \;
+	cp target/bpf/bpfel-unknown-none/release/libferros_firewall_ebpf.so target/ferros_firewall_ebpf.o
 
 run: all
 	cd userspace && cargo run --release -- $(IFACE)

@@ -1,19 +1,16 @@
 IFACE ?= eth0
 
-EBPF_TARGET = target/bpf/bpfel-unknown-none/release/ferros_firewall_ebpf
-EBPF_OBJ = target/ferros_firewall_ebpf.o
-
 .PHONY: all run clean
 
-all: $(EBPF_OBJ)
+all: target/ferros_firewall_ebpf.o
 
-$(EBPF_OBJ): ebpf/src/lib.rs
+target/ferros_firewall_ebpf.o: ebpf/src/lib.rs
 	cargo +nightly build --release \
 		-Z build-std=core \
 		--manifest-path ebpf/Cargo.toml \
 		--target bpfel-unknown-none \
 		--target-dir target/bpf
-	cp $(EBPF_TARGET) $(EBPF_OBJ)
+	cp $$(find target/bpf/bpfel-unknown-none/release/deps/ -type f -name "ferros_firewall_ebpf-*.o") target/ferros_firewall_ebpf.o
 
 run: all
 	cd userspace && cargo run --release -- $(IFACE)

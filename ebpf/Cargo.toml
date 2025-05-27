@@ -7,8 +7,8 @@ edition = "2021"
 crate-type = ["staticlib"]
 
 [dependencies]
-aya-bpf = { git = "https://github.com/aya-rs/aya", rev = "36c4d172f62b0c8b735360d65b9cc865e90bfc0c" }
-aya-log = { git = "https://github.com/aya-rs/aya", rev = "36c4d172f62b0c8b735360d65b9cc865e90bfc0c", optional = true }
+aya-bpf = { git = "https://github.com/aya-rs/aya", rev = "e0dfe73f1dc0e30f51038a1e6cdd632b1833638b" }
+aya-log = { git = "https://github.com/aya-rs/aya", rev = "e0dfe73f1dc0e30f51038a1e6cdd632b1833638b", optional = true }
 
 [build-dependencies]
 aya-tool = "0.1"

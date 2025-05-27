@@ -39,6 +39,6 @@ else
 fi
 
 echo "🧰 Installing aya-tool..."
-cargo install --git https://github.com/aya-rs/aya --package aya-tool
+cargo install --git https://github.com/aya-rs/aya aya-tool
 
 echo "✅ Setup complete. You can now build the firewall with aya-tool."

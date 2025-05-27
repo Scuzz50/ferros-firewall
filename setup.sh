@@ -1,23 +1,44 @@
 #!/bin/bash
 set -e
 
+# Usage: ./setup.sh [network-interface]
 IFACE=${1:-eth0}
-sudo apt update
-sudo apt install -y clang llvm llvm-objcopy llvm-ar libclang-dev     libelf-dev build-essential zlib1g-dev libssl-dev pkg-config git curl jq     linux-headers-$(uname -r)
 
-if ! command -v cargo &>/dev/null; then
+echo "📦 Installing build dependencies..."
+sudo apt update
+sudo apt install -y \
+  build-essential \
+  clang \
+  llvm \
+  libclang-dev \
+  libelf-dev \
+  libbpf-dev \
+  zlib1g-dev \
+  libssl-dev \
+  pkg-config \
+  gcc-multilib \
+  make \
+  git \
+  jq \
+  ca-certificates \
+  curl \
+  linux-headers-$(uname -r)
+
+echo "🦀 Installing Rust (if missing)..."
+if ! command -v cargo >/dev/null 2>&1; then
     curl https://sh.rustup.rs -sSf | sh -s -- -y
-    source "$HOME/.cargo/env"
 fi
 
-source "$HOME/.cargo/env"
-rustup install nightly
-rustup component add rust-src --toolchain nightly
-cargo install bpf-linker --no-default-features || true
+# Source Rust environment for current shell
+if [ -f "$HOME/.cargo/env" ]; then
+    echo "📂 Sourcing Rust environment..."
+    . "$HOME/.cargo/env"
+else
+    echo "❌ Rust environment not found at ~/.cargo/env"
+    exit 1
+fi
 
-echo "📁 Setting Cargo network config for git-fetch-with-cli..."
-mkdir -p $HOME/.cargo
-echo '[net]
-git-fetch-with-cli = true' > $HOME/.cargo/config.toml
+echo "🧰 Installing aya-tool..."
+cargo install --git https://github.com/aya-rs/aya --package aya-tool
 
-make run IFACE=${IFACE}
+echo "✅ Setup complete. You can now build the firewall with aya-tool."

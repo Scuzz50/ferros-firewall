@@ -3,71 +3,19 @@ set -e
 
 IFACE=${1:-eth0}
 
-echo "📦 Installing base build dependencies..."
+echo "📦 Installing system dependencies..."
 sudo apt update
-sudo apt install -y \
-  build-essential \
-  clang \
-  llvm \
-  libelf-dev \
-  zlib1g-dev \
-  libssl-dev \
-  pkg-config \
-  make \
-  git \
-  curl \
-  jq \
-  libzstd-dev \
-  software-properties-common \
-  gnupg \
-  lsb-release \
-  linux-headers-$(uname -r)
+sudo apt install -y clang llvm llvm-dev libclang-dev libelf-dev build-essential pkg-config   linux-headers-$(uname -r) git curl zlib1g-dev libssl-dev llvm-14 llvm-14-dev   libclang-14-dev gcc-multilib jq llvm-ar llvm-strip
 
-echo "➕ Adding LLVM APT repository for version 20..."
-wget https://apt.llvm.org/llvm.sh
-chmod +x llvm.sh
-sudo ./llvm.sh 20
-
-echo "🔧 Installing LLVM 20 toolchain..."
-sudo apt install -y llvm-20-dev libclang-20-dev libpolly-20-dev
-
-echo "🔧 Installing bpftool..."
-sudo apt install -y bpftool libclang-dev
-
-echo "🦀 Installing Rust if missing..."
-if ! command -v cargo &> /dev/null; then
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-    source "$HOME/.cargo/env"
+echo "🦀 Installing Rust toolchain..."
+if ! command -v cargo &>/dev/null; then
+  curl https://sh.rustup.rs -sSf | sh -s -- -y
+  source $HOME/.cargo/env
 fi
 
-echo "📦 Installing nightly + rust-src..."
+source $HOME/.cargo/env
 rustup install nightly
 rustup component add rust-src --toolchain nightly
 
-echo "🔧 Uninstalling any previous bpf-linker..."
-cargo uninstall bpf-linker || true
-
-echo "🔧 Rebuilding bpf-linker with LLVM 20..."
-LLVM_SYS_201_PREFIX=/usr/lib/llvm-20 cargo install bpf-linker --no-default-features
-
-echo "💡 Sourcing Rust environment..."
-source "$HOME/.cargo/env"
-
-echo "📁 Setting Cargo network config for git-fetch-with-cli..."
-mkdir -p ~/.cargo
-echo '[net]' > ~/.cargo/config.toml
-echo 'git-fetch-with-cli = true' >> ~/.cargo/config.toml
-
-echo "🔨 Building and running firewall on ${IFACE}..."
-make run IFACE=${IFACE}
-
-
-echo "🔐 Ensuring root capability for eBPF access..."
-
-if [ "$EUID" -ne 0 ]; then
-  echo "⚠️  Warning: eBPF maps and programs require root privileges."
-  echo "💡 Run the userspace loader with: sudo ./target/release/ferros-userspace eth0"
-fi
-
-echo "💡 To allow unprivileged BPF (dev only), you can run:"
-echo "    sudo sysctl -w kernel.unprivileged_bpf_disabled=0"
+echo "🔨 Building eBPF and userspace..."
+make run IFACE=$IFACE

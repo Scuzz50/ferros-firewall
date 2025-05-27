@@ -1,9 +1,6 @@
 #![no_std]
 #![no_main]
 
-extern crate aya_ebpf;
-extern crate aya_ebpf_macros;
-
 use aya_ebpf::bindings::xdp_action;
 use aya_ebpf::programs::XdpContext;
 use aya_ebpf_macros::xdp;

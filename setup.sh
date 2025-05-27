@@ -60,3 +60,14 @@ echo 'git-fetch-with-cli = true' >> ~/.cargo/config.toml
 
 echo "🔨 Building and running firewall on ${IFACE}..."
 make run IFACE=${IFACE}
+
+
+echo "🔐 Ensuring root capability for eBPF access..."
+
+if [ "$EUID" -ne 0 ]; then
+  echo "⚠️  Warning: eBPF maps and programs require root privileges."
+  echo "💡 Run the userspace loader with: sudo ./target/release/ferros-userspace eth0"
+fi
+
+echo "💡 To allow unprivileged BPF (dev only), you can run:"
+echo "    sudo sysctl -w kernel.unprivileged_bpf_disabled=0"

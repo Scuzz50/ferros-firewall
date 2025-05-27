@@ -3,9 +3,15 @@ name = "ferros_firewall_ebpf"
 version = "0.1.0"
 edition = "2021"
 
-[dependencies]
-aya-ebpf = "0.1.1"
-
 [lib]
-crate-type = ["cdylib"]
-path = "src/lib.rs"
+crate-type = ["staticlib"]
+
+[dependencies]
+aya-bpf = { git = "https://github.com/aya-rs/aya", rev = "36c4d172f62b0c8b735360d65b9cc865e90bfc0c" }
+aya-log = { git = "https://github.com/aya-rs/aya", rev = "36c4d172f62b0c8b735360d65b9cc865e90bfc0c", optional = true }
+
+[build-dependencies]
+aya-tool = "0.1"
+
+[features]
+default = []

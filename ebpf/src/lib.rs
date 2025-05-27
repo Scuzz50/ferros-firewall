@@ -1,7 +1,7 @@
 #![no_std]
 #![no_main]
 
-use aya_ebpf::{
+use aya_bpf::{
     macros::{map, xdp},
     maps::HashMap,
     programs::XdpContext,
@@ -19,7 +19,7 @@ pub fn firewall(ctx: XdpContext) -> u32 {
 }
 
 fn try_firewall(ctx: XdpContext) -> Result<u32, ()> {
-    let ip = u32::from_be(ctx.load(26).map_err(|_| ())?);
+    let ip = u32::from_be(ctx.load(26).map_err(|_| ())?); // load destination IP from packet
     unsafe {
         if BLOCKED_IPS.get(&ip).is_some() {
             return Ok(xdp_action::XDP_DROP);
@@ -34,4 +34,11 @@ mod xdp_action {
     pub const XDP_PASS: u32 = 2;
     pub const XDP_TX: u32 = 3;
     pub const XDP_REDIRECT: u32 = 4;
+}
+
+use core::panic::PanicInfo;
+
+#[panic_handler]
+fn panic(_info: &PanicInfo) -> ! {
+    core::arch::asm!("ud2", options(noreturn))
 }

@@ -42,7 +42,6 @@ fi
 echo "📌 Installing required Rust targets and components..."
 rustup install nightly
 rustup component add rust-src --toolchain nightly
-rustup target add bpfel-unknown-none --toolchain nightly
 
 echo "📁 Building eBPF program..."
 cd ebpf

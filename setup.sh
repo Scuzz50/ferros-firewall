@@ -10,7 +10,8 @@ sudo apt install -y \
   build-essential \
   clang \
   llvm \
-  llvm-objcopy \
+  llvm-15 \
+  llvm-15-tools \
   libclang-dev \
   libelf-dev \
   libbpf-dev \
@@ -52,7 +53,8 @@ cargo +nightly build \
   -p ferros-ebpf
 
 echo "🔧 Stripping and exporting eBPF binary..."
-llvm-objcopy \
+llvm-15 \
+  llvm-15-tools \
   --strip-all \
   --output-format=elf64-bpf \
   target/bpfel-unknown-none/release/ferros_firewall_ebpf \
